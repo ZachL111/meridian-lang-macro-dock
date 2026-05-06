@@ -1,0 +1,73 @@
+{
+  "repo": "meridian-lang-macro-dock",
+  "language": "Julia",
+  "category": "Compilers",
+  "goal": "Create a Julia reference implementation for macro workflows, centered on state machine modeling, transition tables, and invalid-transition tests.",
+  "review_model": {
+    "terms": [
+      "IR pressure",
+      "lowering drift",
+      "stack depth",
+      "diagnostic reach"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "IR pressure",
+      "signal": 40,
+      "slack": 38,
+      "drag": 18,
+      "confidence": 63,
+      "score": 127,
+      "lane": "watch"
+    },
+    {
+      "name": "stress",
+      "focus": "lowering drift",
+      "signal": 73,
+      "slack": 34,
+      "drag": 20,
+      "confidence": 62,
+      "score": 182,
+      "lane": "ship"
+    },
+    {
+      "name": "edge",
+      "focus": "stack depth",
+      "signal": 60,
+      "slack": 20,
+      "drag": 24,
+      "confidence": 86,
+      "score": 154,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "diagnostic reach",
+      "signal": 71,
+      "slack": 37,
+      "drag": 15,
+      "confidence": 55,
+      "score": 189,
+      "lane": "ship"
+    },
+    {
+      "name": "stale",
+      "focus": "IR pressure",
+      "signal": 54,
+      "slack": 23,
+      "drag": 24,
+      "confidence": 60,
+      "score": 119,
+      "lane": "watch"
+    }
+  ]
+}

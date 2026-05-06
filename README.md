@@ -1,68 +1,40 @@
 # meridian-lang-macro-dock
 
-`meridian-lang-macro-dock` is a focused Julia codebase around create a Julia reference implementation for macro workflows, centered on state machine modeling, transition tables, and invalid-transition tests. It is meant to be easy to inspect, run, and extend without a hosted service.
+`meridian-lang-macro-dock` is a Julia project in compilers. Its focus is to create a Julia reference implementation for macro workflows, centered on state machine modeling, transition tables, and invalid-transition tests.
 
-## Meridian Lang Macro Dock Walkthrough
+## Project Rationale
 
-I would read the project from the outside in: command, fixture, model, then roadmap. That keeps the compilers idea grounded in files that can be checked locally.
+This is intentionally local and self-contained so it can be inspected without credentials, services, or seeded history.
 
-## Reason For The Project
+## Meridian Lang Macro Dock Review Notes
 
-This is not a wrapper around a service. It is a self-contained project that shows how the model behaves when demand, capacity, latency, risk, and weight move in different directions.
+Start with `diagnostic reach` and `IR pressure`. Those cases create the widest score spread in this repo, so they are the best quick check when the model changes.
 
-## Capabilities
+## Feature Set
 
-- Models source form with deterministic scoring and explicit review decisions.
-- Uses fixture data to keep intermediate state changes visible in code review.
-- Includes extended examples for bytecode output, including `surge` and `degraded`.
-- Documents evaluation checks tradeoffs in `docs/operations.md`.
-- Runs locally with a single verification command and no external credentials.
+- `fixtures/domain_review.csv` adds cases for IR pressure and lowering drift.
+- `metadata/domain-review.json` records the same cases in structured form.
+- `config/review-profile.json` captures the read order and the two review questions.
+- `examples/meridian-lang-macro-walkthrough.md` walks through the case spread.
+- The Julia code includes a review path for `diagnostic reach` and `IR pressure`.
+- `docs/field-notes.md` explains the strongest and weakest cases.
 
-## How It Is Put Together
+## Architecture
 
-The interesting part is the boundary between accepted and reviewed scenarios. Extended examples sit near that boundary so future edits can show whether the model became more permissive or more cautious. The Julia project keeps the model in a small module with assertions in a local test script.
+The implementation keeps the scoring rule plain: reward signal and confidence, preserve slack, penalize drag, then classify the result into a review lane.
 
-## Where Things Live
+The added Julia path is deliberately direct, with fixtures doing most of the explaining.
 
-- `src`: primary implementation
-- `tests`: verification harness
-- `fixtures`: compact golden scenarios
-- `examples`: expanded scenario set
-- `metadata`: project constants and verification metadata
-- `docs`: operations and extension notes
-- `scripts`: local verification and audit commands
-
-## Getting It Running
-
-Install Julia and run the commands from the repository root. The project does not need credentials or a hosted service.
-
-## Command Examples
+## Usage
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-This runs the language-level build or test path against the compact fixture set.
+## Test Command
 
-## Check The Work
+The verifier is intentionally local. It should fail if the fixture score math, lane assignment, or language-specific test drifts.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
-```
+## Next Improvements
 
-The audit command checks repository structure and README constraints before it delegates to the verifier.
-
-## Data Notes
-
-`baseline` is the first example I would inspect because it lands on the `review` path with a score of 137. The broader file also keeps `degraded` at -9 and `surge` at 230, which gives the model a useful low-to-high spread.
-
-## Tradeoffs
-
-The scoring model is simple by design. More domain-specific behavior should be added through explicit adapters or extra fixture classes rather than hidden constants.
-
-## Possible Extensions
-
-- Split the scoring constants into a typed configuration object and validate it before use.
-- Add a comparison mode that shows how decisions change when one signal is adjusted.
-- Add a loader for `examples/extended_cases.csv` and promote selected cases into the language test suite.
-- Add one more compilers fixture that focuses on a malformed or borderline input.
+The repository is intentionally scoped to local checks. I would expand it by adding adversarial fixtures before adding features.
